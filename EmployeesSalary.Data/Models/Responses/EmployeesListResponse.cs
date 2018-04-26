@@ -5,6 +5,6 @@ namespace EmployeesSalary.Data.Models.Responses
 {
     public class EmployeesListResponse
     {
-        public IList<EmployeeBaseModel> EmployeesList { get; set; }
+        public IPagedCollection<EmployeeBaseModel> EmployeesList { get; set; }
     }
 }

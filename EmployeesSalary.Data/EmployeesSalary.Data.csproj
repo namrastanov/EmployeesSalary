@@ -16,12 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\IServices\" />
-    <Folder Include="Services\" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.2" />
+    <Folder Include="Models\Requests\" />
   </ItemGroup>
 
 </Project>

@@ -14,7 +14,7 @@ namespace EmployeesSalary.Data.Managers
 
         public long GetTotalSalary()
         {
-            return Interlocked.Read(ref totalSalary);
+            return Thread.VolatileRead(ref totalSalary);
         }
     }
 }
