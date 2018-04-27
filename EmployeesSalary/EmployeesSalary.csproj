@@ -7,17 +7,26 @@
     <Content Remove="wwwroot\dist\**" />
     <EmbeddedResource Remove="wwwroot\dist\**" />
     <None Remove="wwwroot\dist\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="nlog.config" />
     <Content Remove="wwwroot\package-lock.json" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="7.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.5.2" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="wwwroot\src\app\components\" />
-    <Folder Include="wwwroot\src\app\services\" />
+    <EmbeddedResource Include="nlog.config">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EmployeesSalary.Data\EmployeesSalary.Data.csproj" />
   </ItemGroup>
 </Project>

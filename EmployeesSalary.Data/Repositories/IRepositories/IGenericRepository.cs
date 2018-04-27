@@ -10,6 +10,8 @@ namespace EmployeesSalary.Data.Repositories.IRepositories
         where TId : struct, IEquatable<TId>
         where TEntity : class, IEntity<TId>
     {
+        IQueryable<TEntity> GetAll();
+
         IQueryable<TEntity> Query(
             Expression<Func<TEntity, bool>> filter = null,
             params Expression<Func<TEntity, object>>[] includes);
@@ -21,6 +23,8 @@ namespace EmployeesSalary.Data.Repositories.IRepositories
 
         Task<TEntity> GetByIdAsync(object id);
 
+        TEntity GetById(object id);
+
         Task<TEntity> InsertAsync(TEntity entity);
 
         Task DeleteAsync(TId id);
@@ -28,5 +32,7 @@ namespace EmployeesSalary.Data.Repositories.IRepositories
         void Delete(TEntity entityToDelete);
 
         void Update(TEntity entityToUpdate);
+
+        void ApplyCurrentValues(TEntity item, params Expression<Func<TEntity, object>>[] properties);
     }
 }

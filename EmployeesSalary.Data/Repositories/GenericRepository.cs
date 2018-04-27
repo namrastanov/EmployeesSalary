@@ -12,13 +12,18 @@ namespace EmployeesSalary.Data.Repositories
         where TId : struct, IEquatable<TId>
         where TEntity : class, IEntity<TId>
     {
-        internal ESDbContext context;
+        internal DbContext _context;
         internal DbSet<TEntity> dbSet;
 
-        public GenericRepository(ESDbContext context)
+        public GenericRepository(DbContext context)
         {
-            this.context = context;
+            _context = context;
             dbSet = context.Set<TEntity>();
+        }
+
+        public IQueryable<TEntity> GetAll()
+        {
+            return dbSet;
         }
 
         public virtual IQueryable<TEntity> Query(
@@ -55,6 +60,11 @@ namespace EmployeesSalary.Data.Repositories
             return await dbSet.FindAsync(id);
         }
 
+        public virtual TEntity GetById(object id)
+        {
+            return dbSet.Find(id);
+        }
+
         public async virtual Task<TEntity> InsertAsync(TEntity entity)
         {
             return (await dbSet.AddAsync(entity)).Entity;
@@ -68,7 +78,7 @@ namespace EmployeesSalary.Data.Repositories
 
         public virtual void Delete(TEntity entityToDelete)
         {
-            if (context.Entry(entityToDelete).State == EntityState.Detached)
+            if (_context.Entry(entityToDelete).State == EntityState.Detached)
             {
                 dbSet.Attach(entityToDelete);
             }
@@ -78,7 +88,37 @@ namespace EmployeesSalary.Data.Repositories
         public virtual void Update(TEntity entityToUpdate)
         {
             dbSet.Attach(entityToUpdate);
-            context.Entry(entityToUpdate).State = EntityState.Modified;
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
+        }
+
+        public void ApplyCurrentValues(TEntity item, params Expression<Func<TEntity, object>>[] properties)
+        {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+
+            var entry = _context.Entry(item);
+            if (properties.Any())
+            {
+                foreach (var property in properties)
+                {
+                    entry.Property(property).IsModified = true;
+                }
+            }
+            else
+            {
+                if (entry.State == EntityState.Detached)
+                {
+                    var attacheItem = GetById(item.Id);
+                    if (attacheItem != null)
+                    {
+                        var attachedEntry = _context.Entry(attacheItem);
+                        attachedEntry.CurrentValues.SetValues(item);
+                    }
+                    else
+                    {
+                        entry.State = EntityState.Modified;
+                    }
+                }
+            }
         }
     }
 }

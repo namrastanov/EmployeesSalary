@@ -4,7 +4,7 @@ namespace EmployeesSalary.Data.Models.BaseModels
 {
     public class EmployeeBaseModel
     {
-        public Guid Id { get; set; }
+        public virtual Guid Id { get; set; }
 
         public int Salary { get; set; }
 
@@ -13,5 +13,7 @@ namespace EmployeesSalary.Data.Models.BaseModels
         public string LastName { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public int ImportedFileId { get; set; }
     }
 }

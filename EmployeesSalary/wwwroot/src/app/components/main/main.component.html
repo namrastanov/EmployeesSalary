@@ -1,3 +1,9 @@
-<p>
-  main works!
-</p>
+
+    <div class="file-button">
+        <input class="file-input" id="import-file-input" name="import-file" type="file" (change)="uploadFile($event)" (click)="$event.target.value=''" />
+        choose-file
+    </div>
+
+
+
+<img *ngIf="showLoading" [src]="'/images/icons/loading.gif'" />

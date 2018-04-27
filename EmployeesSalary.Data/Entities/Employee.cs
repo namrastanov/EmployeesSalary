@@ -20,5 +20,9 @@ namespace EmployeesSalary.Data.Entities
         public string LastName { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public int ImportedFileId { get; set; }
+
+        public virtual ImportedFile ImportedFile { get; set; }
     }
 }
