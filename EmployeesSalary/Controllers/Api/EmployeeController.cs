@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using EmployeesSalary.Data.Helpers;
 using EmployeesSalary.Data.Managers.IManagers;
 using EmployeesSalary.Data.Models.Requests;
+using EmployeesSalary.Data.Models.Responses;
 using EmployeesSalary.Data.Services.IServices;
 using EmployeesSalary.Filters;
 using Microsoft.AspNetCore.Http;
@@ -28,15 +30,29 @@ namespace EmployeesSalary.Controllers.Api
             _employeeImportManager = employeeImportManager;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetEmployeeAsync(Guid id)
+        {
+            var employee = await _employeeService.GetEmployeeAsync(id);
+
+            return ApiOkResult(employee);
+        }
+
         [HttpGet("list/{page}")]
         public async Task<IActionResult> GetEmployeeListAsync(int page)
         {
             var employeesList = await _employeeService.GetEmployeeListAsync(page);
-            return ApiOkResult(employeesList);
+            var response = new EmployeesListResponse
+            {
+                EmployeesList = employeesList,
+                TotalSalary = CacheHelper.GetTotalSalary()
+            };
+
+            return ApiOkResult(response);
         }
 
         [HttpGet("totalSalary")]
-        public IActionResult GetTotalSalary(int page)
+        public IActionResult GetTotalSalary()
         {
             var totalSalary = CacheHelper.GetTotalSalary();
             return ApiOkResult(totalSalary);
@@ -49,11 +65,18 @@ namespace EmployeesSalary.Controllers.Api
             return ApiOkResult(status);
         }
 
-        [HttpPost("add")]
+        [HttpPost]
         public async Task<IActionResult> AddEmployeeAsync(AddEmployeeRequest request)
         {
-            var guid = await _employeeService.AddEmployeeAsync(request);
-            return ApiOkResult(guid);
+            var id = await _employeeService.AddEmployeeAsync(request);
+            return ApiOkResult(id);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEmployeeAsync(Guid id)
+        {
+            await _employeeService.DeleteEmployeeAsync(id);
+            return ApiOkResult(id);
         }
 
         [HttpPost("update")]

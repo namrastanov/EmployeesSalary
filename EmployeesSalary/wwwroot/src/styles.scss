@@ -1,0 +1,41 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+
+.main-toolbar {
+    margin-bottom: 20px;
+
+    .main-toolbar-btn {
+        margin-left: 20px;
+    }
+
+    .example-fill-remaining-space {
+        flex: 1 1 auto;
+    }
+
+    .loading {
+        width: 100px;
+    }
+
+    a {
+        text-decoration: none;
+    }
+}
+
+.empty-list {
+    padding: 10px;
+    color: #4a4a4a;
+    font-size: 14px;
+}
+
+.employee-table {
+    margin: 15px;
+
+    td,th {
+        padding: 4px 17px;
+    }
+}

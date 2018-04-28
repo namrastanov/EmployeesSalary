@@ -45,6 +45,7 @@ namespace EmployeesSalary.Data.Repositories
 
             return query;
         }
+
         public IQueryable<TResult> QuerySelect<TResult>(
             Expression<Func<TEntity, bool>> filter = null,
             Expression<Func<TEntity, TResult>> selector =  null,

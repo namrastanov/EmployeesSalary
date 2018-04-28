@@ -8,6 +8,7 @@ using EmployeesSalary.Data.Models.Requests;
 using EmployeesSalary.Data.Services.IServices;
 using EmployeesSalary.Data.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,14 @@ namespace EmployeesSalary.Data.Services
     public class EmployeeService : IEmployeeService
     {
         private IUnitOfWork _unitOfWork;
+        private IMemoryCache _cache;
 
-        public EmployeeService(IUnitOfWork unitOfWork)
+        public EmployeeService(
+            IUnitOfWork unitOfWork,
+            IMemoryCache cache)
         {
             _unitOfWork = unitOfWork;
+            _cache = cache;
         }
 
         public async Task<Guid> AddEmployeeAsync(AddEmployeeRequest request)
@@ -29,9 +34,22 @@ namespace EmployeesSalary.Data.Services
             var draftEmployee = await InsertEmployeeButNotCommitAsync(request);
 
             await _unitOfWork.CommitAsync();
-            CacheHelper.UpdateTotalSalary(draftEmployee.Salary);
+            CacheHelper.AddToTotalSalary(draftEmployee.Salary);
 
             return draftEmployee.Id;
+        }
+
+        public async Task DeleteEmployeeAsync(Guid id)
+        {
+            var salary = (await _unitOfWork.EmployeeRepository.GetByIdAsync(id))?.Salary;
+
+            if (salary.HasValue)
+            {
+                CacheHelper.AddToTotalSalary(-1 * salary.Value);
+            }
+
+            await _unitOfWork.EmployeeRepository.DeleteAsync(id);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task<int> AddEmployeesAsync(IList<AddEmployeeRequest> employeesList)
@@ -60,8 +78,15 @@ namespace EmployeesSalary.Data.Services
                 await _unitOfWork.CommitAsync();
             }
 
-            CacheHelper.UpdateTotalSalary(currentTotalSalary);
+            CacheHelper.AddToTotalSalary(currentTotalSalary);
             return totalInsertedCount;
+        }
+
+        public async Task<EmployeeBaseModel> GetEmployeeAsync(Guid id)
+        {
+            var entity = await _unitOfWork.EmployeeRepository.GetByIdAsync(id);
+
+            return GetModelFromEntity(entity);
         }
 
         public async Task<IPagedCollection<EmployeeBaseModel>> GetEmployeeListAsync(int page)
@@ -82,20 +107,30 @@ namespace EmployeesSalary.Data.Services
 
         public async Task UpdateEmployeeInfoAsync(UpdateEmployeeRequest request)
         {
+            var existSalary = _unitOfWork.EmployeeRepository.Query(e => e.Id == request.Id).FirstOrDefault()?.Salary;
+            CacheHelper.AddToTotalSalary(request.Salary - existSalary.Value);
+
             var entity = GetEntityFromModel(request);
             entity.Id = request.Id;
+            _unitOfWork.EmployeeRepository.ApplyCurrentValues(
+                entity, 
+                e => e.FirstName,
+                e => e.LastName,
+                e => e.PhoneNumber,
+                e => e.Salary);
 
-            var existEntity = await _unitOfWork.EmployeeRepository.GetByIdAsync(entity.Id);
-            if (existEntity == null)
-            {
-                throw new CustomException("Employee not found");
-            } else
-            {
-                CacheHelper.UpdateTotalSalary(request.Salary - existEntity.Salary);
-            }
-
-            _unitOfWork.EmployeeRepository.Update(entity);
             await _unitOfWork.CommitAsync();
+        }
+
+        public void InitTotalSalary()
+        {
+            var totalSalary = CacheHelper.GetTotalSalary();
+
+            if (totalSalary == 0)
+            {
+                totalSalary = _unitOfWork.EmployeeRepository.GetAll().Sum(e => long.Parse(e.Salary.ToString()));
+                CacheHelper.AddToTotalSalary(totalSalary);
+            }
         }
 
         private async Task<Employee> InsertEmployeeButNotCommitAsync(EmployeeBaseModel employee)

@@ -1,0 +1,54 @@
+<form id="employee-form" [formGroup]="editEmployeeForm" (ngSubmit)="onSubmit()">
+
+    <mat-form-field>
+        <input [(ngModel)]="employee.firstName"
+               type="text"
+               matInput
+               placeholder="FirstName"
+               formControlName="firstName"
+               required>
+        <mat-error *ngIf="submitted && editEmployeeForm.controls['firstName'].hasError('required')">
+            FirstName is Required field
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input [(ngModel)]="employee.lastName"
+               type="text"
+               matInput
+               placeholder="LastName"
+               formControlName="lastName"
+               required>
+        <mat-error *ngIf="submitted && editEmployeeForm.controls['lastName'].hasError('required')">
+            LastName is Required field
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input [(ngModel)]="employee.phoneNumber"
+               type="text"
+               matInput
+               placeholder="PhoneNumber"
+               formControlName="phoneNumber"
+               required>
+        <mat-error *ngIf="submitted && editEmployeeForm.controls['phoneNumber'].hasError('required')">
+            PhoneNumber is Required field
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input [(ngModel)]="employee.salary"
+               type="number"
+               min="10"
+               matInput
+               placeholder="Salary"
+               formControlName="salary"
+               required>
+        <mat-error *ngIf="submitted && editEmployeeForm.controls['salary'].hasError('required')">
+            Salary is Required field
+        </mat-error>
+    </mat-form-field>
+
+    <button type="submit" mat-button>Save</button>
+</form>
+

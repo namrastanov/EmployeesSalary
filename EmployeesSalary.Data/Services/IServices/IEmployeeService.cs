@@ -17,6 +17,13 @@ namespace EmployeesSalary.Data.Services.IServices
         Task<IPagedCollection<EmployeeBaseModel>> GetEmployeeListAsync(int page);
 
         /// <summary>
+        /// Get the employee by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<EmployeeBaseModel> GetEmployeeAsync(Guid id);
+
+        /// <summary>
         /// Add many employees
         /// </summary>
         /// <param name="request"></param>
@@ -36,5 +43,18 @@ namespace EmployeesSalary.Data.Services.IServices
         /// <param name="request"></param>
         /// <returns></returns>
         Task<Guid> AddEmployeeAsync(AddEmployeeRequest request);
+
+        /// <summary>
+        /// Get sum of salaries from db and save it to cache
+        /// Call only at startup
+        /// </summary>
+        /// <returns></returns>
+        void InitTotalSalary();
+
+        /// <summary>
+        /// Delete employee from db by id
+        /// </summary>
+        /// <returns></returns>
+        Task DeleteEmployeeAsync(Guid id);
     }
 }

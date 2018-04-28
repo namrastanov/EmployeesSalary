@@ -11,6 +11,7 @@
   <ItemGroup>
     <Content Remove="nlog.config" />
     <Content Remove="wwwroot\package-lock.json" />
+    <Content Remove="wwwroot\src\app\resolves\employee.resolve.ts" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.5.2" />
@@ -28,5 +29,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EmployeesSalary.Data\EmployeesSalary.Data.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\src\app\controls\" />
+    <Folder Include="wwwroot\src\app\pipes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\src\app\resolves\employee.resolve.ts" />
   </ItemGroup>
 </Project>

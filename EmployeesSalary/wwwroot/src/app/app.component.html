@@ -1,1 +1,29 @@
-<router-outlet></router-outlet>
+<mat-toolbar class="main-toolbar">
+    <span style="cursor: pointer" [routerLink]="['/']">
+        Employees Salary
+    </span>
+    <span class="main-toolbar-btn">
+        <button mat-button  [routerLink]="['/employee']">
+            Add
+        </button>
+    </span>
+    <span class="main-toolbar-btn">
+        <button mat-button [routerLink]="['/import']">
+            Import
+        </button>
+    </span>
+    <span class="main-toolbar-btn">
+        <button mat-button [routerLink]="['/files']">
+            Imported files
+        </button>
+    </span>
+
+    <span class="example-fill-remaining-space"></span>
+
+    <span class="loading" *ngIf="showProgress">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </span>
+</mat-toolbar>
+<div style="padding: 20px">
+    <router-outlet></router-outlet>
+</div>

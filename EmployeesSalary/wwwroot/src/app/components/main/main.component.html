@@ -1,9 +1,37 @@
-
-    <div class="file-button">
-        <input class="file-input" id="import-file-input" name="import-file" type="file" (change)="uploadFile($event)" (click)="$event.target.value=''" />
-        choose-file
-    </div>
-
-
-
-<img *ngIf="showLoading" [src]="'/images/icons/loading.gif'" />
+<div *ngIf="empty" class="empty-list">
+    There no employees
+</div>
+<table class="employee-table" *ngIf="!empty">
+    <thead>
+        <tr>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>PhoneNumber</th>
+            <th>Salary</th>
+            <th>SalaryRatio</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let employee of employees">
+            <tr>
+                <td>{{employee.firstName}}</td>
+                <td>{{employee.lastName}}</td>
+                <td>{{employee.phoneNumber}}</td>
+                <td>{{employee.salary}}</td>
+                <td>{{employee.salary | salaryRatio: totalSalary}}</td>
+                <td>
+                    <a href="#" [routerLink]="['/employee', employee.id]">edit</a>
+                </td>
+                <td>
+                    <a href="#" (click)="deleteEmployee(employee.id)">delete</a>
+                </td>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>
+<mat-paginator [length]="totalItems"
+               [pageSize]="20"
+               (page)="filterByPage($event.pageIndex)">
+</mat-paginator>

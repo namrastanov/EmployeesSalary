@@ -1,7 +1,7 @@
 ﻿using EmployeesSalary.Data.Entities;
 using EmployeesSalary.Data.Managers;
 using EmployeesSalary.Data.Managers.IManagers;
-using EmployeesSalary.Data.Models.BaseModels;
+using EmployeesSalary.Data.Models.Requests;
 using EmployeesSalary.Data.Repositories;
 using EmployeesSalary.Data.Repositories.IRepositories;
 using EmployeesSalary.Data.Services;
@@ -27,7 +27,8 @@ namespace EmployeesSalary.Data.Extensions
             services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IImportedFileService, ImportedFileService>();
 
-            services.AddTransient<IValidator<EmployeeBaseModel>, EmployeeValidator>();
+            services.AddTransient<IValidator<UpdateEmployeeRequest>, EmployeeValidator>();
+            services.AddTransient<IValidator<AddEmployeeRequest>, EmployeeValidator>();
             services.AddTransient<IEmployeeImportManager, EmployeeImportManager>();
         }
     }

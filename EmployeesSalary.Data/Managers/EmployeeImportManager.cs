@@ -71,11 +71,12 @@ namespace EmployeesSalary.Data.Managers
             serviceCollection.ApplyEmployeesSalaryBindings(_dbOption.Value.ESDbConnection);
 
             using (var serviceProvider = serviceCollection.BuildServiceProvider())
-            using (var dbContext = (DbContext)serviceProvider.GetService(typeof(DbContext)))
-            using (var unitOfWork = (IUnitOfWork)serviceProvider.GetService(typeof(IUnitOfWork)))
-            using (var @employeeService = (IEmployeeService)serviceProvider.GetService(typeof(IEmployeeService)))
-            using (var @importedFileService = (IImportedFileService)serviceProvider.GetService(typeof(IImportedFileService)))
             {
+                var dbContext = (DbContext)serviceProvider.GetService(typeof(DbContext));
+                var unitOfWork = (IUnitOfWork)serviceProvider.GetService(typeof(IUnitOfWork));
+                var @employeeService = (IEmployeeService)serviceProvider.GetService(typeof(IEmployeeService));
+                var @importedFileService = (IImportedFileService)serviceProvider.GetService(typeof(IImportedFileService));
+
                 var collectionForInsert = new List<AddEmployeeRequest>();
                 for (int i = startRow; i <= endRow; i++)
                 {

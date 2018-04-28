@@ -1,6 +1,6 @@
 export class ApiResponse {
-  Message: string;
-  Data: any;
-  ReturnUrl: string;
-  Status?: number;
+    message: string;
+    data: any;
+    returnUrl: string;
+    status?: number;
 }

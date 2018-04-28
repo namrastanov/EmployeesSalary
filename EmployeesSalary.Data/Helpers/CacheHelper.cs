@@ -6,7 +6,7 @@ namespace EmployeesSalary.Data.Helpers
     {
         private static long totalSalary = 0;
 
-        public static void UpdateTotalSalary(long salary)
+        public static void AddToTotalSalary(long salary)
         {
             Interlocked.Add(ref totalSalary, salary);
         }
